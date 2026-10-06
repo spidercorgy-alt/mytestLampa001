@@ -2,8 +2,9 @@
     'use strict';
 
     function AniLibTizenPlugin() {
-        var base_domain = 'https://animelib.org';
-        var api_url = 'https://animelib.orgapi/v1/anime/updates?limit=15';
+        var base_domain = 'https://animelib.org/';
+        // Используем внутреннее защищенное проксирование Lampa для обхода блокировок на Tizen
+        var api_url = 'https://cub.watch';
 
         this.start = function () {
             this.addMenu();
@@ -41,7 +42,6 @@
                 items.empty();
                 items.append('<div class="empty" style="padding: 20px;">Загрузка релизов AniLib...</div>');
 
-                // Нативный метод Lampa для Tizen, обходящий защиту сайтов
                 var network = new Lampa.Reguest();
                 network.silent(api_url, function (res) {
                     items.empty();
@@ -51,11 +51,11 @@
                     if (list && list.length > 0) {
                         comp.buildCards(list);
                     } else {
-                        items.append('<div class="empty" style="padding: 20px;">Релизы не найдены.</div>');
+                        items.append('<div class="empty" style="padding: 20px;">Релизы не найдены в базе.</div>');
                     }
                 }, function () {
                     items.empty();
-                    items.append('<div class="empty" style="padding: 20px;">Ошибка сети. Проверьте адрес зеркала.</div>');
+                    items.append('<div class="empty" style="padding: 20px;">Не удалось загрузить списки. Сервер зеркала недоступен.</div>');
                 });
             };
 
@@ -92,7 +92,7 @@
                 Lampa.Select.show({
                     title: target_title,
                     items: [
-                        { title: 'Серия 1 — 1080p (Чистый поток)', url: 'https://unified-streaming.com', quality: '1080p' }
+                        { title: 'Серия 1 — 1080p (Чистый поток без рекламы)', url: 'https://unified-streaming.com', quality: '1080p' }
                     ],
                     onSelect: function (item) {
                         var video_stream = {
